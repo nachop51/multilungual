@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useDebounce from './use-debounce'
 import { Language } from '@/types.d'
-import { translateText } from '@/services/api'
+import { translateText } from '@/lib/services/api'
 
 export const useTranslation = () => {
   const [sourceLanguage, setSourceLanguage] = useState<Language>(
@@ -17,19 +17,19 @@ export const useTranslation = () => {
   const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
-    if (debouncedValue.trim() === '') {
+    if (!debouncedValue || debouncedValue.trim() === '') {
       setTranslatedText('')
       return
     }
 
     const fetchTranslation = async () => {
-      if (isFetching) return
+      if (!debouncedValue || debouncedValue.trim() === '') return
 
       setIsFetching(true)
       const res = await translateText({
         sourceText: debouncedValue,
-        sourceLanguage: sourceLanguage as Language,
-        targetLanguage: targetLanguage as Language,
+        sourceLanguage: sourceLanguage,
+        targetLanguage: targetLanguage,
       })
 
       setTranslatedText(res.translation)
@@ -63,13 +63,16 @@ export const useTranslation = () => {
   }
 
   const swapLanguages = () => {
-    const oldSource = sourceLanguage
-
     if (sourceLanguage === targetLanguage) return
     if (sourceLanguage === Language.DETECT) return
 
+    const oldSourceLanguage = sourceLanguage
+
     setSourceLanguage(targetLanguage)
-    setTargetLanguage(oldSource)
+    setTargetLanguage(oldSourceLanguage)
+
+    setSource(translatedText)
+    setTranslatedText('')
   }
 
   return {

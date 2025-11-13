@@ -20,7 +20,7 @@ export default function App() {
   const navLinks = [
     { href: '/', label: 'Translator' },
     { href: '/writer', label: 'Writer' },
-    { href: '/document', label: 'Document Translator' },
+    { href: '/chat', label: 'Multilingüal AI' },
   ]
 
   const menuItems = [

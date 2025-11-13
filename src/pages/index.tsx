@@ -1,5 +1,6 @@
-import Layout from '@/components/common/layout'
-import { useTranslation } from '@/hooks/use-translation'
+import Layout from '@/lib/components/common/layout'
+import { useTranslation } from '@/lib/hooks/use-translation'
+import { formatEnumLanguage } from '@/lib/utils'
 import { Language } from '@/types.d'
 import {
   Autocomplete,
@@ -33,33 +34,31 @@ export default function TranslatorPage() {
           defaultItems={Object.entries(Language)}
           label="Language"
           placeholder="Search a language"
-          defaultSelectedKey="es"
+          defaultSelectedKey={Language.ENGLISH}
           onSelectionChange={handleSourceLanguageChange}
           selectedKey={sourceLanguage}
         >
           {(item) => (
             <AutocompleteItem key={item[1]}>
-              {item[0][0] + item[0].slice(1).toLowerCase().replaceAll('_', ' ')}
+              {formatEnumLanguage(item[0])}
             </AutocompleteItem>
           )}
         </Autocomplete>
 
         <Textarea
-          className="mt-4 max-w-xl"
           size="lg"
           spellCheck="false"
           label="Source Text"
           placeholder="Enter text to translate"
           value={source}
           onValueChange={(v) => setSource(v)}
+          className="mt-4 max-w-xl"
           classNames={{
-            innerWrapper: 'min-h-80',
             inputWrapper: 'py-4 px-5',
-            input: 'text-xl field-sizing-content max-h-none h-auto!',
+            input: 'text-xl',
           }}
-          style={{
-            height: 'auto',
-          }}
+          minRows={12}
+          maxRows={40}
         />
       </section>
 
@@ -89,7 +88,7 @@ export default function TranslatorPage() {
           )}
           label="Language"
           placeholder="Search a language"
-          defaultSelectedKey="en"
+          defaultSelectedKey={Language.SPANISH}
           selectedKey={targetLanguage}
           onSelectionChange={handleTargetLanguageChange}
         >
@@ -104,10 +103,11 @@ export default function TranslatorPage() {
           size="lg"
           className="mt-4 max-w-xl"
           classNames={{
-            innerWrapper: 'h-80',
             inputWrapper: 'py-4 px-5',
             input: 'text-xl',
           }}
+          minRows={12}
+          maxRows={40}
           label="Translation"
           placeholder="Translated text will appear here"
           isReadOnly

@@ -1,11 +1,14 @@
-import { serve, sql } from 'bun'
+import { serve } from 'bun'
 import index from './index.html'
-import type { Translation, TranslationResponse } from './types'
-import { translateSchema } from './schemas/translate'
+import type { TranslationResponse, WriterResponse } from './types'
+import { translateSchema } from './lib/schemas/translate'
 import z from 'zod'
-import { geminiTranslate } from './server/gemini'
+import { geminiRewrite, geminiTranslate } from './server/gemini'
+import { rewriteSchema } from './lib/schemas/rewrite'
 
 const server = serve({
+  hostname: '0.0.0.0',
+  port: 3000,
   routes: {
     // Serve index.html for all unmatched routes.
     '/*': index,
@@ -26,7 +29,7 @@ const server = serve({
             JSON.stringify(z.flattenError(res.error).fieldErrors),
             {
               status: 400,
-            }
+            },
           )
         }
 
@@ -40,35 +43,65 @@ const server = serve({
       },
     },
 
-    '/api/hello': {
-      async GET(req) {
-        const res = await sql<Translation[]>`SELECT * FROM translations`
-
-        console.log('Database translations:', res)
-
-        return Response.json(res)
-      },
+    '/api/rewrite': {
       async POST(req) {
-        const body = await req.json()
+        if (
+          !req.body ||
+          req.headers.get('content-type') !== 'application/json'
+        ) {
+          return new Response('Bad Request', { status: 400 })
+        }
 
-        const res = await sql<Translation[]>`
-        INSERT INTO translations (source_text, target_text, source_language, target_language)
-        VALUES (${'Hello, world!'}, ${'Hola, mundo!'}, ${'EN'}, ${'ES'})
-          RETURNING *
-        `
+        const res = rewriteSchema.safeParse(await req.json())
 
-        console.log({ res })
+        if (!res.success) {
+          return new Response(
+            JSON.stringify(z.flattenError(res.error).fieldErrors),
+            {
+              status: 400,
+            },
+          )
+        }
 
-        return Response.json(res[0])
+        const text = await geminiRewrite(res.data)
+
+        const rewrite: WriterResponse = {
+          improvedText: text,
+        }
+
+        return Response.json(rewrite)
       },
     },
 
-    '/api/hello/:name': async (req) => {
-      const name = req.params.name
-      return Response.json({
-        message: `Hello, ${name}!`,
-      })
-    },
+    // '/api/hello': {
+    //   async GET(req) {
+    //     const res = await sql<Translation[]>`SELECT * FROM translations`
+
+    //     console.log('Database translations:', res)
+
+    //     return Response.json(res)
+    //   },
+    //   async POST(req) {
+    //     const body = await req.json()
+
+    //     const res = await sql<Translation[]>`
+    //     INSERT INTO translations (source_text, target_text, source_language, target_language)
+    //     VALUES (${'Hello, world!'}, ${'Hola, mundo!'}, ${'EN'}, ${'ES'})
+    //       RETURNING *
+    //     `
+
+    //     console.log({ res })
+
+    //     return Response.json(res[0])
+    //   },
+    // },
+
+    // '/api/hello/:name': async (req) => {
+    //   const name = req.params.name
+    //   return Response.json({
+    //     message: `Hello, ${name}!`,
+    //   })
+    // },
   },
 
   development: process.env.NODE_ENV !== 'production' && {

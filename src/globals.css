@@ -9,5 +9,6 @@
 @layer base {
   :root {
     @apply font-sans;
+    interpolate-size: allow-keywords; /* 👈 */
   }
 }
