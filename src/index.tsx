@@ -1,10 +1,19 @@
 import { serve } from 'bun'
 import index from './index.html'
-import type { TranslationResponse, WriterResponse } from './types'
+import {
+  CHAT_ROLES,
+  type ChatResponse,
+  type TranslationResponse,
+  type WriterResponse,
+} from './types.d'
 import { translateSchema } from './lib/schemas/translate'
 import z from 'zod'
-import { geminiRewrite, geminiTranslate } from './server/gemini'
+import { geminiChat, geminiRewrite, geminiTranslate } from './server/gemini'
 import { rewriteSchema } from './lib/schemas/rewrite'
+import { chatSchema } from './lib/schemas/chat'
+import type { Content } from '@google/genai'
+
+export const chatHistory = new Map<string, Content[]>()
 
 const server = serve({
   hostname: '0.0.0.0',
@@ -57,9 +66,7 @@ const server = serve({
         if (!res.success) {
           return new Response(
             JSON.stringify(z.flattenError(res.error).fieldErrors),
-            {
-              status: 400,
-            },
+            { status: 400 },
           )
         }
 
@@ -70,6 +77,48 @@ const server = serve({
         }
 
         return Response.json(rewrite)
+      },
+    },
+
+    '/api/chat': {
+      async POST(req) {
+        if (
+          !req.body ||
+          req.headers.get('content-type') !== 'application/json'
+        ) {
+          return new Response('Bad Request', { status: 400 })
+        }
+
+        const res = chatSchema.safeParse(await req.json())
+
+        if (!res.success) {
+          return new Response(
+            JSON.stringify(z.flattenError(res.error).fieldErrors),
+            { status: 400 },
+          )
+        }
+
+        const { message, conversationId } = res.data
+        const previousHistory = chatHistory.get(conversationId) ?? []
+
+        const text = await geminiChat({
+          message,
+          history: previousHistory.slice(-4), // send only last 4 messages for context
+        })
+
+        chatHistory.set(conversationId, [
+          ...previousHistory,
+          { role: CHAT_ROLES.USER, parts: [{ text: message }] },
+          { role: CHAT_ROLES.AI, parts: [{ text }] },
+        ])
+
+        // console.log({ chatHistory, chat: chatHistory.get(conversationId) })
+
+        const chatResponse: ChatResponse = {
+          response: text,
+        }
+
+        return Response.json(chatResponse)
       },
     },
 

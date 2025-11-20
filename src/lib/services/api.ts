@@ -1,4 +1,6 @@
 import type {
+  ChatInput,
+  ChatResponse,
   Translation,
   TranslationResponse,
   WriterInput,
@@ -24,4 +26,12 @@ export function rewriteText(data: WriterInput) {
       json: data,
     })
     .json<WriterResponse>()
+}
+
+export function chatWithAi(data: ChatInput) {
+  return api
+    .post('chat', {
+      json: data,
+    })
+    .json<ChatResponse>()
 }

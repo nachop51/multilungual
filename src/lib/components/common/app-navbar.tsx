@@ -12,6 +12,7 @@ import {
 import { Link, useLocation } from 'wouter'
 import { Icon } from '@iconify/react'
 import { cn } from '@/lib/utils'
+import { ThemeSwitcher } from './theme-swticher'
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -20,7 +21,7 @@ export default function App() {
   const navLinks = [
     { href: '/', label: 'Translator' },
     { href: '/writer', label: 'Writer' },
-    { href: '/chat', label: 'Multilingüal AI' },
+    { href: '/chat', label: 'Chat' },
   ]
 
   const menuItems = [
@@ -37,7 +38,7 @@ export default function App() {
   ]
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen} maxWidth="xl">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -67,6 +68,8 @@ export default function App() {
             </UILink>
           </NavbarItem>
         ))}
+
+        <ThemeSwitcher />
       </NavbarContent>
 
       <NavbarMenu>

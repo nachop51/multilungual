@@ -11,11 +11,13 @@
   "dependencies": {
     "@google/genai": "^1.31.0",
     "@heroui/react": "^2.8.5",
+    "@heroui/use-theme": "^2.1.10",
     "@iconify/react": "^6.0.2",
     "bun-plugin-tailwind": "^0.1.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.25",
     "ky": "^1.14.0",
+    "marked": "^17.0.1",
     "react": "^19",
     "react-dom": "^19",
     "tailwind-merge": "^3.3.1",
@@ -23,6 +25,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -1,10 +1,10 @@
+import ChatHistory from '@/lib/components/chat/chat-history'
 import PromptInput from '@/lib/components/chat/prompt-input'
 import Layout from '@/lib/components/common/layout'
 import { useMultilingualChat } from '@/lib/hooks/use-multilingual-chat'
 import { cn } from '@/lib/utils'
-import { Button, Textarea, Tooltip } from '@heroui/react'
+import { Button, Tooltip } from '@heroui/react'
 import { Icon } from '@iconify/react'
-import { useState } from 'react'
 
 export default function ChatPage() {
   const { prompt, setPrompt, chatHistory, submitPrompt } = useMultilingualChat()
@@ -15,20 +15,21 @@ export default function ChatPage() {
     setPrompt('')
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      event.key === 'Enter' &&
+      !(event.metaKey || event.ctrlKey || event.shiftKey)
+    ) {
+      event.preventDefault()
+      submitPrompt()
+      setPrompt('')
+    }
+  }
+
   return (
     <Layout className="grid h-[calc(100vh-64px)] max-w-5xl grid-rows-[1fr_auto] justify-stretch">
       <section className="w-full">
-        {chatHistory.map((message, idx) => (
-          <div key={idx} className={cn('flex flex-col gap-2')}>
-            <div className={cn('flex items-center gap-2')}>
-              <div className={cn('h-8 w-8 rounded-full bg-gray-300')} />
-              <div className={cn('text-sm text-gray-500')}>{message.role}</div>
-            </div>
-            <div className={cn('rounded-md bg-gray-100 p-2')}>
-              {message.content}
-            </div>
-          </div>
-        ))}
+        <ChatHistory chatHistory={chatHistory} />
       </section>
 
       <section className="w-full">
@@ -73,6 +74,7 @@ export default function ChatPage() {
             value={prompt}
             variant="flat"
             onValueChange={setPrompt}
+            onKeyDown={handleKeyDown}
           />
           <div className="flex w-full items-center justify-between gap-2 overflow-auto px-4 pb-4">
             <div className="flex w-full gap-1 md:gap-3">
@@ -117,7 +119,7 @@ export default function ChatPage() {
               </Button>
             </div>
             <p className="text-tiny text-default-400 py-1">
-              {prompt.length}/2000
+              {prompt.length}/500
             </p>
           </div>
         </form>
