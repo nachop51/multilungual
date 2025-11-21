@@ -5,6 +5,7 @@ import { CHAT_ROLES, type ChatMessage } from '@/types.d'
 
 interface ChatHistoryProps {
   chatHistory: ChatMessage[]
+  updatePrompt: (prompt: string) => void
 }
 
 // This has to be related to the examples shown when there's no chat history
@@ -39,7 +40,10 @@ const examples = [
   },
 ]
 
-export default function ChatHistory({ chatHistory }: ChatHistoryProps) {
+export default function ChatHistory({
+  chatHistory,
+  updatePrompt,
+}: ChatHistoryProps) {
   if (!chatHistory || chatHistory.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
@@ -69,9 +73,7 @@ export default function ChatHistory({ chatHistory }: ChatHistoryProps) {
                   <button
                     key={prompt}
                     className="text-default-700 bg-content2 hover:bg-content3 cursor-pointer rounded-md px-4 py-2 text-sm transition-colors"
-                    onClick={() => {
-                      navigator.clipboard.writeText(prompt)
-                    }}
+                    onClick={() => updatePrompt(prompt)}
                   >
                     {prompt}
                   </button>
@@ -94,10 +96,13 @@ export default function ChatHistory({ chatHistory }: ChatHistoryProps) {
             </div>
           )}
           <div
-            className={cn('prose prose-sm rounded-xl bg-gray-100 text-lg', {
-              'mb-4 bg-transparent': role === CHAT_ROLES.AI,
-              'max-w-lg self-end p-4': role === CHAT_ROLES.USER,
-            })}
+            className={cn(
+              'prose prose-sm dark:prose-invert bg-content1 rounded-xl text-lg',
+              {
+                'mb-4 bg-transparent': role === CHAT_ROLES.AI,
+                'max-w-lg self-end p-4': role === CHAT_ROLES.USER,
+              },
+            )}
             dangerouslySetInnerHTML={{ __html: marked(content) }}
           ></div>
         </article>

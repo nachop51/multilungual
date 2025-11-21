@@ -29,7 +29,7 @@ export default function ChatPage() {
   return (
     <Layout className="grid h-[calc(100vh-64px)] max-w-5xl grid-rows-[1fr_auto] justify-stretch">
       <section className="w-full">
-        <ChatHistory chatHistory={chatHistory} />
+        <ChatHistory chatHistory={chatHistory} updatePrompt={setPrompt} />
       </section>
 
       <section className="w-full">
