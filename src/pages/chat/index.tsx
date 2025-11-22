@@ -3,7 +3,7 @@ import PromptInput from '@/lib/components/chat/prompt-input'
 import Layout from '@/lib/components/common/layout'
 import { useMultilingualChat } from '@/lib/hooks/use-multilingual-chat'
 import { cn } from '@/lib/utils'
-import { Button, Tooltip } from '@heroui/react'
+import { Button, ScrollShadow, Tooltip } from '@heroui/react'
 import { Icon } from '@iconify/react'
 
 export default function ChatPage() {
@@ -28,9 +28,9 @@ export default function ChatPage() {
 
   return (
     <Layout className="grid h-[calc(100vh-64px)] max-w-5xl grid-rows-[1fr_auto] justify-stretch">
-      <section className="w-full">
+      <ScrollShadow className="w-full" hideScrollBar>
         <ChatHistory chatHistory={chatHistory} updatePrompt={setPrompt} />
-      </section>
+      </ScrollShadow>
 
       <section className="w-full">
         <form
