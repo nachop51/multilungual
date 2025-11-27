@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/fns'
 import { Icon } from '@iconify/react'
 import { CHAT_ROLES, type ChatMessage } from '@/types.d'
 import { MultilingualLogo } from '@/assets/Logo'
@@ -78,7 +78,7 @@ export default function ChatHistory({
             className={cn(
               'prose prose-sm dark:prose-invert bg-content2 rounded-xl text-lg',
               {
-                'mb-4 bg-transparent': role === CHAT_ROLES.AI,
+                'mb-4 max-w-none bg-transparent': role === CHAT_ROLES.AI,
                 'max-w-lg self-end p-4': role === CHAT_ROLES.USER,
               },
             )}

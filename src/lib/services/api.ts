@@ -1,7 +1,6 @@
 import type {
   ChatInput,
   ChatResponse,
-  Translation,
   TranslationInput,
   TranslationResponse,
   WriterInput,

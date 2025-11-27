@@ -10,19 +10,20 @@ import {
   Link as UILink,
 } from '@heroui/react'
 import { Link, useLocation } from 'wouter'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/fns'
 import { ThemeSwitcher } from './theme-swticher'
 import { MultilingualLogo } from '@/assets/Logo'
 import { Icon } from '@iconify/react'
+import { paths } from '@/lib/utils/paths'
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [location] = useLocation()
 
   const navLinks = [
-    { href: '/', label: 'Translator', icon: 'mdi:translate' },
-    { href: '/writer', label: 'Writer', icon: 'mdi:pencil' },
-    { href: '/chat', label: 'Chat', icon: 'mdi:chat' },
+    { href: paths.translator(), label: 'Translator', icon: 'mdi:translate' },
+    { href: paths.writer(), label: 'Writer', icon: 'mdi:pencil' },
+    { href: paths.chat(), label: 'Chat', icon: 'mdi:chat' },
   ]
 
   return (
@@ -32,7 +33,7 @@ export default function App() {
       maxWidth="xl"
     >
       <NavbarContent>
-        <NavbarBrand className="items-center" as={Link}>
+        <NavbarBrand className="items-center" as={Link} href={paths.home()}>
           <MultilingualLogo className="text-primary mr-2 size-6" />
           <p className="font-bold text-inherit">Multilingüal</p>
         </NavbarBrand>

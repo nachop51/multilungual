@@ -1,6 +1,6 @@
 import Layout from '@/lib/components/common/layout'
 import { useWriter } from '@/lib/hooks/use-writer'
-import { formatEnumLanguage } from '@/lib/utils'
+import { formatEnumLanguage } from '@/lib/utils/fns'
 import { AUDIENCES, FLUENCY_LEVELS, Language, STYLES, TONES } from '@/types.d'
 import {
   Autocomplete,
@@ -40,10 +40,10 @@ export default function WriterPage() {
 
   return (
     <Layout className="flex-col">
-      <header className="bg-content2 mb-8 space-y-4 rounded-xl p-6">
+      <header className="bg-content1/40 border-primary/20 mb-8 space-y-4 rounded-xl border p-6">
         <h1 className="text-primary text-3xl font-bold">Writer</h1>
 
-        <div className="[&>p]:text-lg">
+        <div className="[&>p]:text-lg [&>p]:not-last-of-type:mb-2">
           <p>
             Multilingual AI will help you to write better and faster. It will
             automatically fix your grammar, suggest better words, and fix any
@@ -93,10 +93,7 @@ export default function WriterPage() {
         </section>
 
         <div className="flex w-8 items-center">
-          <Divider
-            orientation="vertical"
-            className="bg-secondary mx-auto h-2/3"
-          />
+          <Divider orientation="vertical" className="mx-auto h-2/3" />
         </div>
 
         <section className="w-full">

@@ -1,6 +1,6 @@
 import Layout from '@/lib/components/common/layout'
 import { useTranslation } from '@/lib/hooks/use-translation'
-import { formatEnumLanguage } from '@/lib/utils'
+import { formatEnumLanguage } from '@/lib/utils/fns'
 import { Language } from '@/types.d'
 import {
   Autocomplete,
@@ -74,7 +74,7 @@ export default function TranslatorPage() {
         </Button>
 
         <div className="flex h-[calc(100%-26px-48px)] flex-col items-center justify-center">
-          <Divider orientation="vertical" className="bg-secondary h-2/3" />
+          <Divider orientation="vertical" className="h-2/3" />
         </div>
       </div>
 
