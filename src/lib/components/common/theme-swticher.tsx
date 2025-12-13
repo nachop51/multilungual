@@ -19,13 +19,31 @@ export const ThemeSwitcher = () => {
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        <DropdownItem key="system" onClick={() => setTheme('system')}>
+        <DropdownItem
+          key="system"
+          onClick={() => setTheme('system')}
+          classNames={{
+            base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
+          }}
+        >
           System
         </DropdownItem>
-        <DropdownItem key="light" onClick={() => setTheme('light')}>
+        <DropdownItem
+          key="light"
+          onClick={() => setTheme('light')}
+          classNames={{
+            base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
+          }}
+        >
           Light
         </DropdownItem>
-        <DropdownItem key="dark" onClick={() => setTheme('dark')}>
+        <DropdownItem
+          key="dark"
+          onClick={() => setTheme('dark')}
+          classNames={{
+            base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
+          }}
+        >
           Dark
         </DropdownItem>
       </DropdownMenu>
