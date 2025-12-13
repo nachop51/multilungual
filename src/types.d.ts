@@ -98,13 +98,13 @@ export interface WriterInput {
   audience?: AUDIENCES
 }
 
+export interface WriterResponse {
+  improvedText: string
+}
+
 export enum CHAT_ROLES {
   USER = 'user',
   AI = 'model',
-}
-
-export interface WriterResponse {
-  improvedText: string
 }
 
 export interface ChatMessage {

@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import { cn } from '@/lib/utils'
 import { Icon } from '@iconify/react'
 import { CHAT_ROLES, type ChatMessage } from '@/types.d'
+import { MultilingualLogo } from '@/assets/Logo'
 
 interface ChatHistoryProps {
   chatHistory: ChatMessage[]
@@ -12,31 +13,17 @@ interface ChatHistoryProps {
 // It has to be about Languages/Linguistics and curious facts about it
 const examples = [
   {
-    icon: 'emojione-monotone:clown-face',
-    name: 'Fun',
-    prompts: [
-      '¿Cuáles son algunos trabalenguas divertidos en español?',
-      'Can you tell me a joke in French?',
-      'Was sind einige lustige Redewendungen auf Deutsch?',
-    ],
+    icon: 'gravity-ui:face-fun',
+    label: 'How do I conjugate irregular verbs in Spanish present tense?',
   },
   {
-    icon: 'emojione-monotone:books',
-    name: 'Learning',
-    prompts: [
-      '¿Cuáles son las reglas gramaticales básicas del italiano?',
-      'How do I conjugate verbs in Spanish?',
-      'Quels sont les temps verbaux en français et comment les utiliser?',
-    ],
+    icon: 'lets-icons:book',
+    label: 'Teach me some casual slang to use with friends in Italian',
   },
   {
-    icon: 'emojione-monotone:globe-with-meridians',
-    name: 'Culture',
-    prompts: [
-      '¿Puedes contarme sobre las diferencias culturales entre países de habla hispana?',
-      'What are some unique customs in Japan related to language?',
-      'Quelles sont les différences culturelles entre la France et le Canada francophone?',
-    ],
+    icon: 'lets-icons:world-2',
+    label:
+      'How do formal and informal speech differ across different languages?',
   },
 ]
 
@@ -48,38 +35,29 @@ export default function ChatHistory({
     return (
       <div className="flex h-full flex-col items-center justify-center">
         <header className="mb-8 flex flex-col items-center justify-center">
-          <Icon icon="lucide:book-open" className="text-default-600 text-4xl" />
-          <h1 className="text-default-600 text-3xl">Multilingüal AI</h1>
+          <span className="bg-content2/30 mb-4 inline-flex h-24 w-24 items-center justify-center rounded-full">
+            <MultilingualLogo className="text-primary size-13" />
+          </span>
+          <h1 className="text-default-600 font- text-3xl font-medium">
+            How can I help you today?
+          </h1>
+          <p className="text-secondary/50 mt-2 text-lg">
+            Choose a template or ask anything
+          </p>
         </header>
 
         <div className="grid grid-cols-3 gap-4">
           {examples.map((example) => (
-            <article
-              key={example.name}
-              className="bg-content1 flex flex-col items-center gap-4 rounded-lg p-4"
+            <button
+              key={example.label}
+              className="text-default-700 bg-content2 hover:bg-content3 flex cursor-pointer flex-col items-center gap-4 rounded-md p-4 text-sm transition-colors lg:flex-row lg:items-start"
+              onClick={() => updatePrompt(example.label)}
             >
-              <header className="flex flex-col items-center gap-2">
-                <Icon
-                  icon={example.icon}
-                  className="text-default-600 size-10"
-                />
-                <h3 className="text-default-600 mb-2 text-xl">
-                  {example.name}
-                </h3>
-              </header>
-
-              <div className="flex flex-col gap-2">
-                {example.prompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    className="text-default-700 bg-content2 hover:bg-content3 cursor-pointer rounded-md px-4 py-2 text-sm transition-colors"
-                    onClick={() => updatePrompt(prompt)}
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            </article>
+              <span className="bg-background/20 inline-flex items-center justify-center rounded-full p-2">
+                <Icon icon={example.icon} className="text-foreground size-5" />
+              </span>
+              {example.label}
+            </button>
           ))}
         </div>
       </div>
@@ -89,15 +67,15 @@ export default function ChatHistory({
   return (
     <>
       {chatHistory.map(({ role, content }, idx) => (
-        <article key={idx} className={'flex flex-col gap-4'}>
+        <article key={idx} className={'mb-6 flex flex-col gap-4'}>
           {role === CHAT_ROLES.AI && (
-            <div className="bg-content3-foreground/5 grid size-12 place-items-center rounded-full">
-              <Icon icon="lucide:book-open" className="size-5" />
+            <div className="bg-content2/30 grid size-12 place-items-center rounded-full">
+              <MultilingualLogo className="text-primary size-6" />
             </div>
           )}
           <div
             className={cn(
-              'prose prose-sm dark:prose-invert bg-content1 rounded-xl text-lg',
+              'prose prose-sm dark:prose-invert bg-content2 rounded-xl text-lg',
               {
                 'mb-4 bg-transparent': role === CHAT_ROLES.AI,
                 'max-w-lg self-end p-4': role === CHAT_ROLES.USER,

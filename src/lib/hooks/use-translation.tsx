@@ -25,7 +25,10 @@ export const useTranslation = () => {
     const fetchTranslation = async () => {
       if (!debouncedValue || debouncedValue.trim() === '') return
 
+      if (isFetching) return
+
       setIsFetching(true)
+
       const res = await translateText({
         sourceText: debouncedValue,
         sourceLanguage: sourceLanguage,

@@ -10,9 +10,9 @@ import {
   Link as UILink,
 } from '@heroui/react'
 import { Link, useLocation } from 'wouter'
-import { Icon } from '@iconify/react'
 import { cn } from '@/lib/utils'
 import { ThemeSwitcher } from './theme-swticher'
+import { MultilingualLogo } from '@/assets/Logo'
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -44,8 +44,8 @@ export default function App() {
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
         />
-        <NavbarBrand className="items-center">
-          <Icon icon="lucide:book-open" className="mr-2 size-6" />
+        <NavbarBrand className="items-center" as={Link}>
+          <MultilingualLogo className="text-primary mr-2 size-6" />
           <p className="font-bold text-inherit">Multilingüal</p>
         </NavbarBrand>
       </NavbarContent>
