@@ -46,15 +46,15 @@ export default function ChatHistory({
           </p>
         </header>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid gap-4 lg:grid-cols-3">
           {examples.map((example) => (
             <button
               key={example.label}
-              className="text-default-700 bg-content2 hover:bg-content3 flex cursor-pointer flex-col items-center gap-4 rounded-md p-4 text-sm transition-colors lg:flex-row lg:items-start"
+              className="text-default-700 bg-content2 hover:bg-content3 flex cursor-pointer flex-col items-center gap-4 rounded-xl p-4 text-center text-lg transition-colors lg:flex-row lg:items-start lg:text-left"
               onClick={() => updatePrompt(example.label)}
             >
               <span className="bg-background/20 inline-flex items-center justify-center rounded-full p-2">
-                <Icon icon={example.icon} className="text-foreground size-5" />
+                <Icon icon={example.icon} className="text-foreground size-10" />
               </span>
               {example.label}
             </button>

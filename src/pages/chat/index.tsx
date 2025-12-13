@@ -42,7 +42,7 @@ export default function ChatPage() {
   }
 
   return (
-    <Layout className="grid h-[calc(100vh-64px)] max-w-5xl grid-rows-[1fr_auto] justify-stretch">
+    <Layout className="grid h-[calc(100vh-64px)] max-w-7xl grid-rows-[1fr_auto] justify-stretch">
       <ScrollShadow className="w-full" hideScrollBar>
         <ChatHistory chatHistory={chatHistory} updatePrompt={setPrompt} />
       </ScrollShadow>
