@@ -25,10 +25,9 @@ export default function TranslatorPage() {
   } = useTranslation()
 
   return (
-    <Layout>
+    <Layout className="flex-col gap-6 lg:flex-row">
       <section className="w-full">
         <Autocomplete
-          className="max-w-xl"
           size="lg"
           spellCheck="false"
           defaultItems={Object.entries(Language)}
@@ -39,7 +38,12 @@ export default function TranslatorPage() {
           selectedKey={sourceLanguage}
         >
           {(item) => (
-            <AutocompleteItem key={item[1]}>
+            <AutocompleteItem
+              key={item[1]}
+              classNames={{
+                base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
+              }}
+            >
               {formatEnumLanguage(item[0])}
             </AutocompleteItem>
           )}
@@ -52,7 +56,7 @@ export default function TranslatorPage() {
           placeholder="Enter text to translate"
           value={source}
           onValueChange={(v) => setSource(v)}
-          className="mt-4 max-w-xl"
+          className="mt-4"
           classNames={{
             inputWrapper: 'py-4 px-5',
             input: 'text-xl',
@@ -67,7 +71,7 @@ export default function TranslatorPage() {
           size="lg"
           isIconOnly
           variant="flat"
-          className="mt-6.5"
+          className="mt-6.5 w-full lg:w-auto"
           onPress={swapLanguages}
           color="primary"
         >
@@ -75,14 +79,13 @@ export default function TranslatorPage() {
         </Button>
 
         <div className="flex h-[calc(100%-26px-48px)] flex-col items-center justify-center">
-          <Divider orientation="vertical" className="h-2/3" />
+          <Divider orientation="vertical" className="bg-secondary h-2/3" />
         </div>
       </div>
 
       <section className="w-full">
         <Autocomplete
           size="lg"
-          className="max-w-xl"
           defaultItems={Object.entries(Language).filter(
             ([, value]) => value !== Language.DETECT,
           )}
@@ -93,7 +96,12 @@ export default function TranslatorPage() {
           onSelectionChange={handleTargetLanguageChange}
         >
           {(item) => (
-            <AutocompleteItem key={item[1]}>
+            <AutocompleteItem
+              key={item[1]}
+              classNames={{
+                base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
+              }}
+            >
               {item[0][0] + item[0].slice(1).toLowerCase().replaceAll('_', ' ')}
             </AutocompleteItem>
           )}
@@ -101,7 +109,7 @@ export default function TranslatorPage() {
 
         <Textarea
           size="lg"
-          className="mt-4 max-w-xl"
+          className="mt-4"
           classNames={{
             inputWrapper: 'py-4 px-5',
             input: 'text-xl',
