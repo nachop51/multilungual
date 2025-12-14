@@ -9,8 +9,6 @@ interface ChatHistoryProps {
   updatePrompt: (prompt: string) => void
 }
 
-// This has to be related to the examples shown when there's no chat history
-// It has to be about Languages/Linguistics and curious facts about it
 const examples = [
   {
     icon: 'gravity-ui:face-fun',
@@ -53,8 +51,11 @@ export default function ChatHistory({
               className="text-default-700 bg-content2 hover:bg-content3 flex cursor-pointer flex-col items-center gap-4 rounded-xl p-4 text-center text-lg transition-colors lg:flex-row lg:items-start lg:text-left"
               onClick={() => updatePrompt(example.label)}
             >
-              <span className="bg-background/20 inline-flex items-center justify-center rounded-full p-2">
-                <Icon icon={example.icon} className="text-foreground size-10" />
+              <span className="bg-background/20 inline-flex items-center justify-center rounded-full p-1 md:p-2">
+                <Icon
+                  icon={example.icon}
+                  className="text-foreground size-6 md:size-10"
+                />
               </span>
               {example.label}
             </button>
