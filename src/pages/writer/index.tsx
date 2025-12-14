@@ -40,16 +40,16 @@ export default function WriterPage() {
 
   return (
     <Layout className="flex-col">
-      <header className="mb-8">
+      <header className="bg-content2 mb-8 rounded-xl p-6">
         <h1 className="text-primary text-3xl font-bold">Writer</h1>
-        <p className="text-muted-foreground mt-2 text-lg">
+        <p className="mt-4 text-lg">
           Multilingual AI will help you to write better and faster. It will
           automatically fix your grammar, suggest better words, and fix any
           spelling mistakes. You can also choose from a variety of choices to
           suit your writing style.
         </p>
 
-        <p>
+        <p className="mt-4 text-lg">
           You can choose, for example, to write in a more formal or casual
           style, or to make your text more concise or elaborate.
         </p>
@@ -145,7 +145,7 @@ export default function WriterPage() {
             </Select>
 
             <Button
-              className="grow self-end"
+              className="w-full grow self-end"
               color={
                 fluency !== FLUENCY_LEVELS.FLUENT ||
                 audience !== AUDIENCES.GENERAL
@@ -177,6 +177,7 @@ export default function WriterPage() {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        placement="center"
         classNames={{
           base: 'bg-background',
         }}
