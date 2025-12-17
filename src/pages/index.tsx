@@ -38,12 +38,7 @@ export default function TranslatorPage() {
           selectedKey={sourceLanguage}
         >
           {(item) => (
-            <AutocompleteItem
-              key={item[1]}
-              classNames={{
-                base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-              }}
-            >
+            <AutocompleteItem key={item[1]}>
               {formatEnumLanguage(item[0])}
             </AutocompleteItem>
           )}
@@ -96,12 +91,7 @@ export default function TranslatorPage() {
           onSelectionChange={handleTargetLanguageChange}
         >
           {(item) => (
-            <AutocompleteItem
-              key={item[1]}
-              classNames={{
-                base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-              }}
-            >
+            <AutocompleteItem key={item[1]}>
               {item[0][0] + item[0].slice(1).toLowerCase().replaceAll('_', ' ')}
             </AutocompleteItem>
           )}

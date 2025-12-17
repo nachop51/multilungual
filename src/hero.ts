@@ -18,6 +18,7 @@ export default heroui({
         content3: '#3B3261',
         content4: '#4E456F',
         default: {
+          DEFAULT: '#241C4B',
           100: '#1A1333',
           200: '#251F4B',
           300: '#3B3261',

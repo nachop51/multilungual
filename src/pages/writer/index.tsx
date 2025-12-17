@@ -40,19 +40,22 @@ export default function WriterPage() {
 
   return (
     <Layout className="flex-col">
-      <header className="bg-content2 mb-8 rounded-xl p-6">
+      <header className="bg-content2 mb-8 space-y-4 rounded-xl p-6">
         <h1 className="text-primary text-3xl font-bold">Writer</h1>
-        <p className="mt-4 text-lg">
-          Multilingual AI will help you to write better and faster. It will
-          automatically fix your grammar, suggest better words, and fix any
-          spelling mistakes. You can also choose from a variety of choices to
-          suit your writing style.
-        </p>
 
-        <p className="mt-4 text-lg">
-          You can choose, for example, to write in a more formal or casual
-          style, or to make your text more concise or elaborate.
-        </p>
+        <div className="[&>p]:text-lg">
+          <p>
+            Multilingual AI will help you to write better and faster. It will
+            automatically fix your grammar, suggest better words, and fix any
+            spelling mistakes. You can also choose from a variety of choices to
+            suit your writing style.
+          </p>
+
+          <p>
+            You can choose, for example, to write in a more formal or casual
+            style, or to make your text more concise or elaborate.
+          </p>
+        </div>
       </header>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -69,12 +72,7 @@ export default function WriterPage() {
             onSelectionChange={handleLanguageChange}
           >
             {(item) => (
-              <AutocompleteItem
-                key={item[1]}
-                classNames={{
-                  base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                }}
-              >
+              <AutocompleteItem key={item[1]}>
                 {formatEnumLanguage(item[0])}
               </AutocompleteItem>
             )}
@@ -113,14 +111,7 @@ export default function WriterPage() {
               onSelectionChange={handleStyleChange}
             >
               {Object.entries(STYLES).map(([, value]) => (
-                <SelectItem
-                  key={value}
-                  classNames={{
-                    base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                  }}
-                >
-                  {value}
-                </SelectItem>
+                <SelectItem key={value}>{value}</SelectItem>
               ))}
             </Select>
             <Select
@@ -133,14 +124,7 @@ export default function WriterPage() {
               onSelectionChange={handleToneChange}
             >
               {Object.entries(TONES).map(([, value]) => (
-                <SelectItem
-                  key={value}
-                  classNames={{
-                    base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                  }}
-                >
-                  {value}
-                </SelectItem>
+                <SelectItem key={value}>{value}</SelectItem>
               ))}
             </Select>
 
@@ -200,14 +184,7 @@ export default function WriterPage() {
                     onSelectionChange={handleStyleChange}
                   >
                     {Object.entries(STYLES).map(([, value]) => (
-                      <SelectItem
-                        key={value}
-                        classNames={{
-                          base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                        }}
-                      >
-                        {value}
-                      </SelectItem>
+                      <SelectItem key={value}>{value}</SelectItem>
                     ))}
                   </Select>
                   <Select
@@ -220,14 +197,7 @@ export default function WriterPage() {
                     onSelectionChange={handleToneChange}
                   >
                     {Object.entries(TONES).map(([, value]) => (
-                      <SelectItem
-                        key={value}
-                        classNames={{
-                          base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                        }}
-                      >
-                        {value}
-                      </SelectItem>
+                      <SelectItem key={value}>{value}</SelectItem>
                     ))}
                   </Select>
                 </div>
@@ -243,14 +213,7 @@ export default function WriterPage() {
                     onSelectionChange={handleAudienceChange}
                   >
                     {Object.entries(AUDIENCES).map(([, value]) => (
-                      <SelectItem
-                        key={value}
-                        classNames={{
-                          base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                        }}
-                      >
-                        {value}
-                      </SelectItem>
+                      <SelectItem key={value}>{value}</SelectItem>
                     ))}
                   </Select>
                   <Select
@@ -263,14 +226,7 @@ export default function WriterPage() {
                     onSelectionChange={handleFluencyChange}
                   >
                     {Object.entries(FLUENCY_LEVELS).map(([, value]) => (
-                      <SelectItem
-                        key={value}
-                        classNames={{
-                          base: 'aria-selected:bg-primary/30! hover:bg-primary/10!',
-                        }}
-                      >
-                        {value}
-                      </SelectItem>
+                      <SelectItem key={value}>{value}</SelectItem>
                     ))}
                   </Select>
                 </div>
