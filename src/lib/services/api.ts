@@ -2,6 +2,7 @@ import type {
   ChatInput,
   ChatResponse,
   Translation,
+  TranslationInput,
   TranslationResponse,
   WriterInput,
   WriterResponse,
@@ -12,7 +13,7 @@ const api = ky.create({
   prefixUrl: '/api',
 })
 
-export function translateText(data: Omit<Translation, 'translatedText'>) {
+export function translateText(data: TranslationInput) {
   return api
     .post('translate', {
       json: data,
