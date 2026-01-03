@@ -1,17 +1,17 @@
+import type { Content } from '@google/genai'
 import { serve } from 'bun'
+import z from 'zod'
 import index from './index.html'
+import { chatSchema } from './lib/schemas/chat'
+import { rewriteSchema } from './lib/schemas/rewrite'
+import { translateSchema } from './lib/schemas/translate'
+import { geminiChat, geminiRewrite, geminiTranslate } from './server/gemini'
 import {
   CHAT_ROLES,
   type ChatResponse,
   type TranslationResponse,
   type WriterResponse,
 } from './types.d'
-import { translateSchema } from './lib/schemas/translate'
-import z from 'zod'
-import { geminiChat, geminiRewrite, geminiTranslate } from './server/gemini'
-import { rewriteSchema } from './lib/schemas/rewrite'
-import { chatSchema } from './lib/schemas/chat'
-import type { Content } from '@google/genai'
 
 export const chatHistory = new Map<string, Content[]>()
 
@@ -121,43 +121,10 @@ const server = serve({
         return Response.json(chatResponse)
       },
     },
-
-    // '/api/hello': {
-    //   async GET(req) {
-    //     const res = await sql<Translation[]>`SELECT * FROM translations`
-
-    //     console.log('Database translations:', res)
-
-    //     return Response.json(res)
-    //   },
-    //   async POST(req) {
-    //     const body = await req.json()
-
-    //     const res = await sql<Translation[]>`
-    //     INSERT INTO translations (source_text, target_text, source_language, target_language)
-    //     VALUES (${'Hello, world!'}, ${'Hola, mundo!'}, ${'EN'}, ${'ES'})
-    //       RETURNING *
-    //     `
-
-    //     console.log({ res })
-
-    //     return Response.json(res[0])
-    //   },
-    // },
-
-    // '/api/hello/:name': async (req) => {
-    //   const name = req.params.name
-    //   return Response.json({
-    //     message: `Hello, ${name}!`,
-    //   })
-    // },
   },
 
   development: process.env.NODE_ENV !== 'production' && {
-    // Enable browser hot reloading in development
     hmr: true,
-
-    // Echo console logs from the browser to the server
     console: true,
   },
 })

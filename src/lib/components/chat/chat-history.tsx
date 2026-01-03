@@ -1,8 +1,8 @@
-import { marked } from 'marked'
-import { cn } from '@/lib/utils/fns'
 import { Icon } from '@iconify/react'
-import { CHAT_ROLES, type ChatMessage } from '@/types.d'
+import { marked } from 'marked'
 import { MultilingualLogo } from '@/assets/Logo'
+import { cn } from '@/lib/utils/fns'
+import { CHAT_ROLES, type ChatMessage } from '@/types.d'
 
 interface ChatHistoryProps {
   chatHistory: ChatMessage[]
@@ -48,6 +48,7 @@ export default function ChatHistory({
           {examples.map((example) => (
             <button
               key={example.label}
+              type="button"
               className="text-default-700 bg-content2 hover:bg-content3 flex cursor-pointer flex-col items-center gap-4 rounded-xl p-4 text-center text-lg transition-colors lg:flex-row lg:items-start lg:text-left"
               onClick={() => updatePrompt(example.label)}
             >

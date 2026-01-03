@@ -1,20 +1,20 @@
-import { useState } from 'react'
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
+  NavbarMenuToggle,
   Link as UILink,
 } from '@heroui/react'
-import { Link, useLocation } from 'wouter'
-import { cn } from '@/lib/utils/fns'
-import { ThemeSwitcher } from './theme-swticher'
-import { MultilingualLogo } from '@/assets/Logo'
 import { Icon } from '@iconify/react'
+import { useState } from 'react'
+import { Link, useLocation } from 'wouter'
+import { MultilingualLogo } from '@/assets/Logo'
+import { cn } from '@/lib/utils/fns'
 import { paths } from '@/lib/utils/paths'
+import { ThemeSwitcher } from './theme-swticher'
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -83,7 +83,7 @@ export default function App() {
               as={Link}
               onPress={() => setIsMenuOpen(false)}
             >
-              <span className="bg-content1/30 inline-flex h-12 w-12 items-center justify-center rounded-full">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-content1/30">
                 <Icon icon={icon} />
               </span>
               {label}

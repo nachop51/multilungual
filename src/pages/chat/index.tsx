@@ -1,10 +1,10 @@
+import { Button, ScrollShadow, Tooltip } from '@heroui/react'
+import { Icon } from '@iconify/react'
 import ChatHistory from '@/lib/components/chat/chat-history'
 import PromptInput from '@/lib/components/chat/prompt-input'
 import Layout from '@/lib/components/common/layout'
 import { useMultilingualChat } from '@/lib/hooks/use-multilingual-chat'
 import { cn } from '@/lib/utils/fns'
-import { Button, ScrollShadow, Tooltip } from '@heroui/react'
-import { Icon } from '@iconify/react'
 
 const actions = [
   {

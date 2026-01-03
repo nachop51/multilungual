@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import useDebounce from './use-debounce'
-import { Language } from '@/types.d'
 import { translateText } from '@/lib/services/api'
+import { Language } from '@/types.d'
+import useDebounce from './use-debounce'
 
 export const useTranslation = () => {
   const [sourceLanguage, setSourceLanguage] = useState<Language>(
@@ -16,6 +16,7 @@ export const useTranslation = () => {
 
   const [isFetching, setIsFetching] = useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: isFechting does not need to trigger the effect
   useEffect(() => {
     if (!debouncedValue || debouncedValue.trim() === '') {
       setTranslatedText('')

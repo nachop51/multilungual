@@ -1,15 +1,15 @@
+import {
+  Autocomplete,
+  AutocompleteItem,
+  Button,
+  Divider,
+  Textarea,
+} from '@heroui/react'
+import { Icon } from '@iconify/react'
 import Layout from '@/lib/components/common/layout'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { formatEnumLanguage } from '@/lib/utils/fns'
 import { Language } from '@/types.d'
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Textarea,
-  Button,
-  Divider,
-} from '@heroui/react'
-import { Icon } from '@iconify/react'
 
 export default function TranslatorPage() {
   const {
