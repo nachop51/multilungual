@@ -1,1 +1,1 @@
-export const MAX_PROMPT_LENGTH = 500
+export const MAX_PROMPT_LENGTH = 2000

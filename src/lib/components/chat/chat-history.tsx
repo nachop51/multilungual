@@ -100,7 +100,7 @@ export default function ChatHistory({
             className={cn(
               'prose prose-sm dark:prose-invert bg-content2 rounded-2xl text-lg',
               {
-                'mb-4 max-w-none bg-transparent': role === CHAT_ROLES.AI,
+                'max-w-none bg-transparent': role === CHAT_ROLES.AI,
                 'max-w-lg self-end p-4': role === CHAT_ROLES.USER,
               },
             )}
@@ -114,11 +114,14 @@ export default function ChatHistory({
             ) : (
               <p className="text-default-700">{content as string}</p>
             )}
-            {role === CHAT_ROLES.AI && lastIsAi && isStreaming && (
-              <span className="mt-1 inline-block">
-                <ThinkingDots />
-              </span>
-            )}
+            {role === CHAT_ROLES.AI &&
+              lastIsAi &&
+              isStreaming &&
+              idx === chatHistory.length - 1 && (
+                <span className="mt-1 inline-block">
+                  <ThinkingDots />
+                </span>
+              )}
           </div>
         </article>
       ))}

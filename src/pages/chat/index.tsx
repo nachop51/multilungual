@@ -1,34 +1,31 @@
-import { Button, ScrollShadow, Tooltip } from '@heroui/react'
+import { useEffect, useRef } from 'react'
+import { Button, ScrollShadow, Tooltip, useDisclosure } from '@heroui/react'
 import { Icon } from '@iconify/react'
 import ChatHistory from '@/lib/components/chat/chat-history'
 import PromptInput from '@/lib/components/chat/prompt-input'
 import Layout from '@/lib/components/common/layout'
 import { useMultilingualChat } from '@/lib/hooks/use-multilingual-chat'
 import { cn } from '@/lib/utils/fns'
-
-const actions = [
-  {
-    label: 'Attach',
-    icon: 'solar:paperclip-linear',
-  },
-  {
-    label: 'Voice Commands',
-    icon: 'solar:soundwave-linear',
-  },
-  {
-    label: 'Templates',
-    icon: 'solar:notes-linear',
-  },
-]
+import { MAX_PROMPT_LENGTH } from '@/lib/consts'
+import TemplatePicker from '@/lib/components/chat/template-picker'
 
 export default function ChatPage() {
   const { prompt, setPrompt, chatHistory, isStreaming, submitPrompt } =
     useMultilingualChat()
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const shadowRef = useRef<HTMLDivElement>(null)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    submitPrompt()
+  const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault()
     setPrompt('')
+    submitPrompt()
+
+    setTimeout(() => {
+      shadowRef.current?.scrollTo({
+        top: shadowRef.current?.scrollHeight + 30000,
+        behavior: 'smooth',
+      })
+    }, 50)
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,14 +34,13 @@ export default function ChatPage() {
       !(event.metaKey || event.ctrlKey || event.shiftKey)
     ) {
       event.preventDefault()
-      submitPrompt()
-      setPrompt('')
+      handleSubmit()
     }
   }
 
   return (
     <Layout className="grid h-[calc(100vh-64px)] max-w-7xl grid-rows-[1fr_auto] justify-stretch">
-      <ScrollShadow className="w-full" hideScrollBar>
+      <ScrollShadow ref={shadowRef} className="w-full" hideScrollBar>
         <div className="px-4 py-4">
           <ChatHistory
             chatHistory={chatHistory}
@@ -100,35 +96,41 @@ export default function ChatPage() {
           />
           <div className="flex w-full items-center justify-between gap-2 overflow-auto px-4 pb-4">
             <div className="flex w-full gap-1 md:gap-3">
-              {actions.map((action) => (
-                <Button
-                  key={action.label}
-                  size="sm"
-                  className="bg-white/5 hover:bg-white/10"
-                  startContent={
-                    <Icon
-                      className="text-default-500"
-                      icon={action.icon}
-                      width={18}
-                    />
-                  }
-                  variant="flat"
-                >
-                  {action.label}
-                </Button>
-              ))}
+              <Button
+                size="sm"
+                className="bg-content3/40 hover:bg-content3/70"
+                startContent={
+                  <Icon
+                    className="text-default-500"
+                    icon="solar:notes-linear"
+                    width={18}
+                  />
+                }
+                variant="flat"
+                onPress={onOpen}
+              >
+                Templates
+              </Button>
             </div>
             <p
               className={cn(
                 'text-tiny py-1',
-                prompt.length > 500 ? 'text-red-500' : 'text-default-400',
+                prompt.length > MAX_PROMPT_LENGTH
+                  ? 'text-red-500'
+                  : 'text-default-400',
               )}
             >
-              {prompt.length}/500
+              {prompt.length}/{MAX_PROMPT_LENGTH}
             </p>
           </div>
         </form>
       </section>
+
+      <TemplatePicker
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        onSelect={setPrompt}
+      />
     </Layout>
   )
 }

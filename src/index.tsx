@@ -1,6 +1,6 @@
+import index from './index.html'
 import { serve } from 'bun'
 import z from 'zod'
-import index from './index.html'
 import { chatSchema } from './server/schemas/chat'
 import { rewriteSchema } from './server/schemas/rewrite'
 import { translateSchema } from './server/schemas/translate'

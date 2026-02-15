@@ -33,18 +33,18 @@ export const useMultilingualChat = () => {
       history: chatHistory,
     })
 
-    setIsStreaming(true)
     setChatHistory((p) => [
       ...p,
       { role: CHAT_ROLES.AI, content: '', id: p.length + 1 },
     ])
+    setIsStreaming(true)
 
     const reader = stream.body?.pipeThrough(new TextDecoderStream()).getReader()
+
+    if (!reader) return
+
     while (true) {
-      const { done, value } = (await reader?.read()) ?? {
-        done: true,
-        value: '',
-      }
+      const { done, value } = await reader.read()
 
       if (done) break
       setChatHistory((p) => [
@@ -58,7 +58,6 @@ export const useMultilingualChat = () => {
     }
 
     setIsStreaming(false)
-    setPrompt('')
   }
 
   return {
