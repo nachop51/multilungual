@@ -1,15 +1,21 @@
-import { useRef, useState } from 'react'
-import { CHAT_ROLES, type ChatMessage } from '@/types.d'
+import { useState } from 'react'
+import { CHAT_ROLES } from '@/types.d'
 import { MAX_PROMPT_LENGTH } from '../consts'
 import { chatWithAi } from '../services/api'
+import type { ModelMessage } from 'ai'
 
 export const useMultilingualChat = () => {
   const [prompt, setPrompt] = useState('')
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
-  const chatId = useRef(`chat-${Date.now()}-${Math.random()}`)
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [chatHistory, setChatHistory] = useState<
+    (ModelMessage & { id: number })[]
+  >([])
 
   const submitAiResponse = (response: string) => {
-    setChatHistory((p) => [...p, { role: CHAT_ROLES.AI, content: response }])
+    setChatHistory((p) => [
+      ...p,
+      { role: CHAT_ROLES.AI, content: response, id: p.length + 1 },
+    ])
   }
 
   const submitPrompt = async () => {
@@ -19,22 +25,47 @@ export const useMultilingualChat = () => {
 
     setChatHistory((p) => [
       ...p,
-      { role: CHAT_ROLES.USER, content: userPrompt },
+      { role: CHAT_ROLES.USER, content: userPrompt, id: p.length + 1 },
     ])
-    setPrompt('')
 
-    const { response } = await chatWithAi({
+    const stream = await chatWithAi({
       message: userPrompt,
-      conversationId: chatId.current,
+      history: chatHistory,
     })
 
-    submitAiResponse(response)
+    setIsStreaming(true)
+    setChatHistory((p) => [
+      ...p,
+      { role: CHAT_ROLES.AI, content: '', id: p.length + 1 },
+    ])
+
+    const reader = stream.body?.pipeThrough(new TextDecoderStream()).getReader()
+    while (true) {
+      const { done, value } = (await reader?.read()) ?? {
+        done: true,
+        value: '',
+      }
+
+      if (done) break
+      setChatHistory((p) => [
+        ...p.slice(0, -1),
+        {
+          role: CHAT_ROLES.AI,
+          content: (p[p.length - 1]?.content ?? '') + value,
+          id: p.length,
+        },
+      ])
+    }
+
+    setIsStreaming(false)
+    setPrompt('')
   }
 
   return {
     prompt,
     setPrompt,
     chatHistory,
+    isStreaming,
     submitPrompt,
     submitAiResponse,
   }

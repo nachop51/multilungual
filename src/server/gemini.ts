@@ -1,14 +1,16 @@
-import { GoogleGenAI, type Content } from '@google/genai'
 import { GEMINI_MODEL } from './consts'
 import type { Translation, WriterInput } from '@/types.d'
+import { google } from '@ai-sdk/google'
+import { generateText, streamText, type ModelMessage } from 'ai'
 
-const ai = new GoogleGenAI({})
+const model = google(GEMINI_MODEL)
 
 const translationPrompt = (
   text: string,
   sourceLang: string,
   targetLang: string,
-) => `
+) =>
+  `
 You are a translation assistant.
 
 Translate the text from ${sourceLang} to ${targetLang}.
@@ -23,19 +25,19 @@ Rules:
 
 Text:
 ${text}
-`
+`.trim()
 
 export async function geminiTranslate({
   sourceText,
   sourceLanguage,
   targetLanguage,
 }: Omit<Translation, 'translatedText'>): Promise<string> {
-  const response = await ai.models.generateContent({
-    model: GEMINI_MODEL,
-    contents: translationPrompt(sourceText, sourceLanguage, targetLanguage),
+  const { text } = await generateText({
+    model: model,
+    prompt: translationPrompt(sourceText, sourceLanguage, targetLanguage),
   })
 
-  return response.text ?? ''
+  return text
 }
 
 const rewriteSystemInstructions = `
@@ -66,7 +68,7 @@ User Text:
 
 Rewritten Text (informal, friendly, intermediate, beginners):
 "Can you share some tips to help me get better at writing in English fast?"
-`
+`.trim()
 
 const generateRewritePrompt = (
   text: string,
@@ -75,7 +77,8 @@ const generateRewritePrompt = (
   tone: string,
   audience?: string,
   fluency?: string,
-) => `
+) =>
+  `
 Rewrite the user's text using these settings:
 - language: ${language}
 - style: ${style}        // e.g. formal, informal, academic, marketing…
@@ -85,34 +88,30 @@ Rewrite the user's text using these settings:
 
 User text:
 ${text}
-`
+`.trim()
 
 export async function geminiRewrite({
-  text,
+  text: userText,
   style,
   language,
   tone,
   audience,
   fluency,
 }: WriterInput): Promise<string> {
-  const response = await ai.models.generateContent({
-    model: GEMINI_MODEL,
-    contents: generateRewritePrompt(
-      text,
+  const { text } = await generateText({
+    model: model,
+    prompt: generateRewritePrompt(
+      userText,
       style,
       language,
       tone,
       audience,
       fluency,
     ),
-    config: {
-      systemInstruction: rewriteSystemInstructions,
-    }
+    system: rewriteSystemInstructions,
   })
 
-  // console.log('gemini response:', response)
-
-  return response.text ?? ''
+  return text
 }
 
 const chatSystemInstruction = `
@@ -140,26 +139,24 @@ Behavior:
 
 Always respond as Multilingual AI and stay within this scope.`
 
-export async function geminiChat({
+export function geminiChat({
   message,
   history,
 }: {
   message: string
-  history: Content[]
+  history: ModelMessage[]
 }) {
-  const chat = ai.chats.create({
-    model: GEMINI_MODEL,
-    history: history.slice(-32), // keep only last 32 messages to limit context size
-    config: {
-      systemInstruction: chatSystemInstruction,
-    },
+  const stream = streamText({
+    model: model,
+    system: chatSystemInstruction,
+    messages: [
+      ...history,
+      {
+        role: 'user',
+        content: message,
+      },
+    ],
   })
 
-  const response = await chat.sendMessage({
-    message: message,
-  })
-
-  console.log({ response })
-
-  return response.text ?? ''
+  return stream.toTextStreamResponse()
 }

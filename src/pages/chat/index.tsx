@@ -22,7 +22,8 @@ const actions = [
 ]
 
 export default function ChatPage() {
-  const { prompt, setPrompt, chatHistory, submitPrompt } = useMultilingualChat()
+  const { prompt, setPrompt, chatHistory, isStreaming, submitPrompt } =
+    useMultilingualChat()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -44,7 +45,13 @@ export default function ChatPage() {
   return (
     <Layout className="grid h-[calc(100vh-64px)] max-w-7xl grid-rows-[1fr_auto] justify-stretch">
       <ScrollShadow className="w-full" hideScrollBar>
-        <ChatHistory chatHistory={chatHistory} updatePrompt={setPrompt} />
+        <div className="px-4 py-4">
+          <ChatHistory
+            chatHistory={chatHistory}
+            isStreaming={isStreaming}
+            updatePrompt={setPrompt}
+          />
+        </div>
       </ScrollShadow>
 
       <section className="w-full">

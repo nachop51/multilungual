@@ -29,9 +29,7 @@ export function rewriteText(data: WriterInput) {
 }
 
 export function chatWithAi(data: ChatInput) {
-  return api
-    .post('chat', {
-      json: data,
-    })
-    .json<ChatResponse>()
+  return api.post('chat', {
+    json: data,
+  })
 }

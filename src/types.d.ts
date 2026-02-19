@@ -1,3 +1,5 @@
+import type { ModelMessage } from 'ai'
+
 export enum Language {
   DETECT = 'detect',
   ENGLISH = 'english',
@@ -104,17 +106,12 @@ export interface WriterResponse {
 
 export enum CHAT_ROLES {
   USER = 'user',
-  AI = 'model',
-}
-
-export interface ChatMessage {
-  role: CHAT_ROLES
-  content: string
+  AI = 'assistant',
 }
 
 export interface ChatInput {
   message: string
-  conversationId: string
+  history: ModelMessage[]
 }
 
 export interface ChatResponse {

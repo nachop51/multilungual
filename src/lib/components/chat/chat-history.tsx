@@ -2,10 +2,12 @@ import { Icon } from '@iconify/react'
 import { marked } from 'marked'
 import { MultilingualLogo } from '@/assets/Logo'
 import { cn } from '@/lib/utils/fns'
-import { CHAT_ROLES, type ChatMessage } from '@/types.d'
+import { CHAT_ROLES } from '@/types.d'
+import type { ModelMessage } from 'ai'
 
 interface ChatHistoryProps {
-  chatHistory: ChatMessage[]
+  chatHistory: ModelMessage[]
+  isStreaming?: boolean
   updatePrompt: (prompt: string) => void
 }
 
@@ -25,8 +27,23 @@ const examples = [
   },
 ]
 
+function ThinkingDots() {
+  return (
+    <span className="inline-flex gap-0.5" aria-label="Thinking">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="animate-thinking-dots size-1.5 rounded-full bg-current"
+          style={{ animationDelay: `${i * 0.2}s` }}
+        />
+      ))}
+    </span>
+  )
+}
+
 export default function ChatHistory({
   chatHistory,
+  isStreaming = false,
   updatePrompt,
 }: ChatHistoryProps) {
   if (!chatHistory || chatHistory.length === 0) {
@@ -66,6 +83,10 @@ export default function ChatHistory({
     )
   }
 
+  const lastIsAi =
+    chatHistory.length > 0 &&
+    chatHistory[chatHistory.length - 1]?.role === CHAT_ROLES.AI
+
   return (
     <>
       {chatHistory.map(({ role, content }, idx) => (
@@ -77,14 +98,28 @@ export default function ChatHistory({
           )}
           <div
             className={cn(
-              'prose prose-sm dark:prose-invert bg-content2 rounded-xl text-lg',
+              'prose prose-sm dark:prose-invert bg-content2 rounded-2xl text-lg',
               {
                 'mb-4 max-w-none bg-transparent': role === CHAT_ROLES.AI,
                 'max-w-lg self-end p-4': role === CHAT_ROLES.USER,
               },
             )}
-            dangerouslySetInnerHTML={{ __html: marked(content) }}
-          ></div>
+          >
+            {role === CHAT_ROLES.AI ? (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: marked((content as string) || ''),
+                }}
+              />
+            ) : (
+              <p className="text-default-700">{content as string}</p>
+            )}
+            {role === CHAT_ROLES.AI && lastIsAi && isStreaming && (
+              <span className="mt-1 inline-block">
+                <ThinkingDots />
+              </span>
+            )}
+          </div>
         </article>
       ))}
     </>

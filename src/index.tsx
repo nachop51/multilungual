@@ -1,23 +1,15 @@
-import type { Content } from '@google/genai'
 import { serve } from 'bun'
 import z from 'zod'
 import index from './index.html'
-import { chatSchema } from './lib/schemas/chat'
-import { rewriteSchema } from './lib/schemas/rewrite'
-import { translateSchema } from './lib/schemas/translate'
+import { chatSchema } from './server/schemas/chat'
+import { rewriteSchema } from './server/schemas/rewrite'
+import { translateSchema } from './server/schemas/translate'
 import { geminiChat, geminiRewrite, geminiTranslate } from './server/gemini'
-import {
-  CHAT_ROLES,
-  type ChatResponse,
-  type TranslationResponse,
-  type WriterResponse,
-} from './types.d'
-
-export const chatHistory = new Map<string, Content[]>()
+import { type TranslationResponse, type WriterResponse } from './types.d'
 
 const server = serve({
   hostname: '0.0.0.0',
-  port: 3000,
+  port: Bun.env.PORT ? parseInt(Bun.env.PORT) : 3000,
   routes: {
     // Serve index.html for all unmatched routes.
     '/*': index,
@@ -98,27 +90,14 @@ const server = serve({
           )
         }
 
-        const { message, conversationId } = res.data
-        const previousHistory = chatHistory.get(conversationId) ?? []
+        const { message, history } = res.data
 
-        const text = await geminiChat({
+        const textStream = geminiChat({
           message,
-          history: previousHistory.slice(-4), // send only last 4 messages for context
+          history,
         })
 
-        chatHistory.set(conversationId, [
-          ...previousHistory,
-          { role: CHAT_ROLES.USER, parts: [{ text: message }] },
-          { role: CHAT_ROLES.AI, parts: [{ text }] },
-        ])
-
-        // console.log({ chatHistory, chat: chatHistory.get(conversationId) })
-
-        const chatResponse: ChatResponse = {
-          response: text,
-        }
-
-        return Response.json(chatResponse)
+        return textStream
       },
     },
   },

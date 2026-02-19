@@ -12,6 +12,23 @@
   font-family: 'Outfit', sans-serif;
 }
 
+@keyframes thinking-dots {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-thinking-dots {
+  animation: thinking-dots 1.4s ease-in-out infinite;
+}
+
 @layer base {
   :root {
     @apply font-sans;
