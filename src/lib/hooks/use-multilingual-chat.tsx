@@ -1,21 +1,22 @@
 import { useState } from 'react'
-import { CHAT_ROLES } from '@/types.d'
-import { MAX_PROMPT_LENGTH } from '../consts'
+import { CHAT_ROLES, type ChatMessage } from '@/lib/consts'
+import { MAX_PROMPT_LENGTH } from '@/lib/consts'
 import { chatWithAi } from '../services/api'
-import type { ModelMessage } from 'ai'
 
 export const useMultilingualChat = () => {
   const [prompt, setPrompt] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [chatHistory, setChatHistory] = useState<
-    (ModelMessage & { id: number })[]
+    (ChatMessage & { id: number })[]
   >([])
 
   const submitAiResponse = (response: string) => {
-    setChatHistory((p) => [
-      ...p,
-      { role: CHAT_ROLES.AI, content: response, id: p.length + 1 },
-    ])
+    setChatHistory((prev) => {
+      return [
+        ...prev,
+        { role: CHAT_ROLES.AI, content: response, id: prev.length + 1 },
+      ]
+    })
   }
 
   const submitPrompt = async () => {

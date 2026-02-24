@@ -1,9 +1,21 @@
 import { GEMINI_MODEL } from './consts'
-import type { Translation, WriterInput } from '@/types.d'
+import type { Translation, TranslationResponse, WriterInput } from '@/types.d'
 import { google } from '@ai-sdk/google'
 import { generateText, streamText, type ModelMessage } from 'ai'
 
 const model = google(GEMINI_MODEL)
+
+const meaningGenerationPrompt = (text: string) =>
+  `
+Given the following words or short phrase, generate a list of possible meanings and definitions.
+
+The output must be short and concise, like a dictionary entry, use an ordered list to list the meanings and definitions.
+
+Do not add any other text or explanation. Just the meaning and definitions in markdown format.
+
+Input:
+${text}
+`.trim()
 
 const translationPrompt = (
   text: string,
@@ -31,13 +43,26 @@ export async function geminiTranslate({
   sourceText,
   sourceLanguage,
   targetLanguage,
-}: Omit<Translation, 'translatedText'>): Promise<string> {
+}: Omit<Translation, 'translatedText'>): Promise<TranslationResponse> {
+  let meaning: string | null = null
+
+  if (sourceText.split(' ').length < 5) {
+    const { text } = await generateText({
+      model: model,
+      prompt: meaningGenerationPrompt(sourceText),
+    })
+    meaning = text
+  }
+
   const { text } = await generateText({
     model: model,
     prompt: translationPrompt(sourceText, sourceLanguage, targetLanguage),
   })
 
-  return text
+  return {
+    translation: text,
+    sourceMeaning: meaning,
+  }
 }
 
 const rewriteSystemInstructions = `

@@ -1,7 +1,13 @@
 import Layout from '@/lib/components/common/layout'
 import { useWriter } from '@/lib/hooks/use-writer'
 import { formatEnumLanguage } from '@/lib/utils/fns'
-import { AUDIENCES, FLUENCY_LEVELS, Language, STYLES, TONES } from '@/types.d'
+import {
+  AUDIENCES,
+  FLUENCY_LEVELS,
+  STYLES,
+  TONES,
+  LANGUAGES,
+} from '@/lib/consts'
 import {
   Autocomplete,
   AutocompleteItem,
@@ -39,7 +45,7 @@ export default function WriterPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   return (
-    <Layout className="flex-col">
+    <Layout className="">
       <header className="bg-content1/40 border-primary/20 mb-8 space-y-4 rounded-xl border p-6">
         <h1 className="text-primary text-3xl font-bold">Writer</h1>
 
@@ -62,12 +68,12 @@ export default function WriterPage() {
         <section className="w-full">
           <Autocomplete
             fullWidth
-            defaultItems={Object.entries(Language).filter(
-              ([, value]) => value !== Language.DETECT,
+            defaultItems={Object.entries(LANGUAGES).filter(
+              ([, value]) => value !== LANGUAGES.DETECT,
             )}
             label="Language"
             placeholder="Search a language"
-            defaultSelectedKey={Language.ENGLISH}
+            defaultSelectedKey={LANGUAGES.ENGLISH}
             selectedKey={language}
             onSelectionChange={handleLanguageChange}
           >

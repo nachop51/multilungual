@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Button, ScrollShadow, Tooltip, useDisclosure } from '@heroui/react'
 import { Icon } from '@iconify/react'
 import ChatHistory from '@/lib/components/chat/chat-history'

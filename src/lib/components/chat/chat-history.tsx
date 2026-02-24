@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 import { marked } from 'marked'
 import { MultilingualLogo } from '@/assets/Logo'
 import { cn } from '@/lib/utils/fns'
-import { CHAT_ROLES } from '@/types.d'
+import { CHAT_ROLES } from '@/lib/consts'
 import type { ModelMessage } from 'ai'
 
 interface ChatHistoryProps {

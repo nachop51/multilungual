@@ -1,4 +1,15 @@
-import { AUDIENCES, FLUENCY_LEVELS, Language, STYLES, TONES } from '@/types.d'
+import {
+  AUDIENCES,
+  FLUENCY_LEVELS,
+  STYLES,
+  TONES,
+  LANGUAGES,
+  type Language,
+  type Tone,
+  type Style,
+  type Audience,
+  type FluencyLevel,
+} from '@/lib/consts'
 import { useEffect, useState } from 'react'
 import useDebounce from './use-debounce'
 import { rewriteText } from '../services/api'
@@ -7,11 +18,11 @@ import type { SharedSelection } from '@heroui/react'
 export const useWriter = () => {
   const [text, setText] = useState('')
   const [debouncedValue] = useDebounce(text, 1000)
-  const [tone, setTone] = useState<TONES>(TONES.NEUTRAL)
-  const [style, setStyle] = useState<STYLES>(STYLES.NORMAL)
-  const [audience, setAudience] = useState<AUDIENCES>(AUDIENCES.GENERAL)
-  const [fluency, setFluency] = useState<FLUENCY_LEVELS>(FLUENCY_LEVELS.FLUENT)
-  const [language, setLanguage] = useState<Language>(Language.ENGLISH)
+  const [tone, setTone] = useState<Tone>(TONES.NEUTRAL)
+  const [style, setStyle] = useState<Style>(STYLES.NORMAL)
+  const [audience, setAudience] = useState<Audience>(AUDIENCES.GENERAL)
+  const [fluency, setFluency] = useState<FluencyLevel>(FLUENCY_LEVELS.FLUENT)
+  const [language, setLanguage] = useState<Language>(LANGUAGES.ENGLISH)
   const [isFetching, setIsFetching] = useState(false)
 
   const [improvedText, setImprovedText] = useState('')
@@ -25,30 +36,30 @@ export const useWriter = () => {
   const handleStyleChange = (key: SharedSelection) => {
     if (typeof key === 'string') return
 
-    setStyle(Array.from(key)[0] as STYLES)
+    setStyle(Array.from(key)[0] as Style)
   }
 
   const handleToneChange = (key: SharedSelection) => {
     if (typeof key === 'string') return
 
-    setTone(Array.from(key)[0] as TONES)
+    setTone(Array.from(key)[0] as Tone)
   }
 
   const handleFluencyChange = (key: SharedSelection) => {
     if (typeof key === 'string') return
 
-    setFluency(Array.from(key)[0] as FLUENCY_LEVELS)
+    setFluency(Array.from(key)[0] as FluencyLevel)
   }
 
   const handleAudienceChange = (key: SharedSelection) => {
     if (typeof key === 'string') return
 
-    setAudience(Array.from(key)[0] as AUDIENCES)
+    setAudience(Array.from(key)[0] as Audience)
   }
 
   useEffect(() => {
     if (!debouncedValue || debouncedValue.trim() === '') {
-      setImprovedText('')
+      // setImprovedText('')
       return
     }
 

@@ -83,7 +83,7 @@ export default function App() {
               as={Link}
               onPress={() => setIsMenuOpen(false)}
             >
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-content1/30">
+              <span className="bg-content1/30 inline-flex h-12 w-12 items-center justify-center rounded-full">
                 <Icon icon={icon} />
               </span>
               {label}

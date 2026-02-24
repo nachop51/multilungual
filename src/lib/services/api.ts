@@ -1,11 +1,10 @@
 import type {
   ChatInput,
-  ChatResponse,
   TranslationInput,
   TranslationResponse,
   WriterInput,
   WriterResponse,
-} from '@/types'
+} from '@/lib/types.d'
 import ky from 'ky'
 
 const api = ky.create({

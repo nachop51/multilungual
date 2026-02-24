@@ -1,25 +1,27 @@
 import { useEffect, useState } from 'react'
 import { translateText } from '@/lib/services/api'
-import { Language } from '@/types.d'
 import useDebounce from './use-debounce'
+import { LANGUAGES, type Language } from '../consts'
 
 export const useTranslation = () => {
   const [sourceLanguage, setSourceLanguage] = useState<Language>(
-    Language.SPANISH,
+    LANGUAGES.SPANISH,
   )
   const [targetLanguage, setTargetLanguage] = useState<Language>(
-    Language.ENGLISH,
+    LANGUAGES.ENGLISH,
   )
   const [source, setSource] = useState('')
   const [debouncedValue] = useDebounce(source, 1000)
   const [translatedText, setTranslatedText] = useState('')
+  const [meaningsAndDefinitions, setMeaningsAndDefinitions] = useState<
+    string | null
+  >(null)
+  const [showMeaningsFromTarget, setShowMeaningsFromTarget] = useState(false)
 
   const [isFetching, setIsFetching] = useState(false)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: isFechting does not need to trigger the effect
   useEffect(() => {
     if (!debouncedValue || debouncedValue.trim() === '') {
-      setTranslatedText('')
       return
     }
 
@@ -37,17 +39,18 @@ export const useTranslation = () => {
       })
 
       setTranslatedText(res.translation)
+      setMeaningsAndDefinitions(res.sourceMeaning)
     }
 
     fetchTranslation().finally(() => setIsFetching(false))
-  }, [debouncedValue, sourceLanguage, targetLanguage])
+  }, [debouncedValue, sourceLanguage, targetLanguage, isFetching])
 
   const handleSourceLanguageChange = (key: string | number | null) => {
     if (!key || key.toString().trim() === '') return
     setSourceLanguage(key.toString() as Language)
 
     if (key.toString() === targetLanguage) {
-      const newTarget = Object.values(Language).find((lang) => lang !== key)
+      const newTarget = Object.values(LANGUAGES).find((lang) => lang !== key)
       if (newTarget) {
         setTargetLanguage(newTarget)
       }
@@ -59,7 +62,7 @@ export const useTranslation = () => {
     setTargetLanguage(key.toString() as Language)
 
     if (key.toString() === sourceLanguage) {
-      const newSource = Object.values(Language).find((lang) => lang !== key)
+      const newSource = Object.values(LANGUAGES).find((lang) => lang !== key)
       if (newSource) {
         setSourceLanguage(newSource)
       }
@@ -68,7 +71,7 @@ export const useTranslation = () => {
 
   const swapLanguages = () => {
     if (sourceLanguage === targetLanguage) return
-    if (sourceLanguage === Language.DETECT) return
+    if (sourceLanguage === LANGUAGES.DETECT) return
 
     const oldSourceLanguage = sourceLanguage
 
@@ -85,7 +88,10 @@ export const useTranslation = () => {
     source,
     setSource,
     translatedText,
+    meaningsAndDefinitions,
     isFetching,
+    showMeaningsFromTarget,
+    setShowMeaningsFromTarget,
     handleSourceLanguageChange,
     handleTargetLanguageChange,
     swapLanguages,

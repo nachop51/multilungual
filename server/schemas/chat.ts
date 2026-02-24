@@ -1,6 +1,6 @@
 import z from 'zod'
 import { CHAT_ROLES } from '@/types.d'
-import { MAX_PROMPT_LENGTH } from '@/lib/consts'
+import { MAX_PROMPT_LENGTH } from '@//lib/consts'
 
 export const chatSchema = z.object({
   message: z

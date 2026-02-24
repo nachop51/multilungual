@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/fns'
+import { cn } from '@//lib/utils/fns'
 
 export default function Layout({
   children,
@@ -8,12 +8,7 @@ export default function Layout({
   className?: string
 }) {
   return (
-    <main
-      className={cn(
-        'relative mx-auto flex w-full max-w-7xl justify-center gap-4 p-8',
-        className,
-      )}
-    >
+    <main className={cn('mx-auto w-full max-w-7xl p-8', className)}>
       {children}
     </main>
   )
