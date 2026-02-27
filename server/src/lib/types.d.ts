@@ -27,10 +27,7 @@ export interface WriterResponse {
 
 export interface ChatInput {
   message: string
-  history: {
-    role: ChatRole
-    content: string
-  }[]
+  history: ModelMessage[]
 }
 
 export interface ChatResponse {

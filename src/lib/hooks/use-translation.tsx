@@ -11,7 +11,7 @@ export const useTranslation = () => {
     LANGUAGES.ENGLISH,
   )
   const [source, setSource] = useState('')
-  const [debouncedValue] = useDebounce(source, 1000)
+  const debouncedValue = useDebounce(source, 1000)
   const [translatedText, setTranslatedText] = useState('')
   const [meaningsAndDefinitions, setMeaningsAndDefinitions] = useState<
     string | null
@@ -21,7 +21,9 @@ export const useTranslation = () => {
   const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
+    console.log('debouncedValue', debouncedValue)
     if (!debouncedValue || debouncedValue.trim() === '') {
+      setTranslatedText('')
       return
     }
 
@@ -38,12 +40,14 @@ export const useTranslation = () => {
         targetLanguage: targetLanguage,
       })
 
-      setTranslatedText(res.translation)
-      setMeaningsAndDefinitions(res.sourceMeaning)
+      if (res.data) {
+        setTranslatedText(res.data.translation)
+        setMeaningsAndDefinitions(res.data.sourceMeaning)
+      }
     }
 
     fetchTranslation().finally(() => setIsFetching(false))
-  }, [debouncedValue, sourceLanguage, targetLanguage, isFetching])
+  }, [debouncedValue, sourceLanguage, targetLanguage])
 
   const handleSourceLanguageChange = (key: string | number | null) => {
     if (!key || key.toString().trim() === '') return

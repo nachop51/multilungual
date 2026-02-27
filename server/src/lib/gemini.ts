@@ -1,5 +1,5 @@
 import { GEMINI_MODEL } from './consts'
-import type { Translation, TranslationResponse, WriterInput } from '@/types.d'
+import type { Translation, TranslationResponse, WriterInput } from './types.d'
 import { google } from '@ai-sdk/google'
 import { generateText, streamText, type ModelMessage } from 'ai'
 

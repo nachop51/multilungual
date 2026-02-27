@@ -3,6 +3,10 @@ import type {
   SystemModelMessage,
   UserModelMessage,
 } from 'ai'
+import type { GoogleGenerativeAIModelId } from '@ai-sdk/google/internal'
+
+export const GEMINI_MODEL = Bun.env
+  .GOOGLE_GENERATIVE_AI_MODEL as GoogleGenerativeAIModelId
 
 export const MAX_PROMPT_LENGTH = 2000
 
