@@ -2,16 +2,17 @@ import {
   Autocomplete,
   AutocompleteItem,
   Button,
-  Checkbox,
   Divider,
   Textarea,
 } from '@heroui/react'
 import { Icon } from '@iconify/react'
 import Layout from '@/lib/components/common/layout'
-import { useTranslation } from '@/lib/hooks/use-translation'
-import { cn, formatEnumLanguage } from '@/lib/utils/fns'
-import { marked } from 'marked'
+import { useTranslation } from '@/lib/translation/hooks/use-translation'
+import { formatEnumLanguage } from '@/lib/utils/fns'
 import { LANGUAGES } from '@/lib/consts'
+import { useRef } from 'react'
+import { useDictionary } from '@/lib/translation/hooks/use-dictionary'
+import { Meanings } from '@/lib/translation/components/meanings'
 
 export default function TranslatorPage() {
   const {
@@ -21,13 +22,57 @@ export default function TranslatorPage() {
     setSource,
     isFetching,
     translatedText,
-    meaningsAndDefinitions,
     handleSourceLanguageChange,
     handleTargetLanguageChange,
     swapLanguages,
-    showMeaningsFromTarget,
-    setShowMeaningsFromTarget,
   } = useTranslation()
+
+  const {
+    meanings,
+    fecthMeanings,
+    isFetching: isFetchingDictionary,
+  } = useDictionary()
+
+  const sourceTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const translationTextareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleClick = (origin: 'source' | 'translation') => {
+    const idx =
+      origin === 'source'
+        ? (sourceTextareaRef.current?.selectionStart ?? 0)
+        : (translationTextareaRef.current?.selectionStart ?? 0)
+
+    const text = origin === 'source' ? source : translatedText
+
+    let wordStart = 0
+    let wordEnd = text.length
+
+    for (let i = idx - 1; i >= 0; i--) {
+      if (text[i] === ' ') {
+        wordStart = i + 1
+        break
+      }
+    }
+
+    for (let i = idx; i < text.length; i++) {
+      if (text[i] === ' ') {
+        wordEnd = i
+        break
+      }
+    }
+
+    console.log({ wordStart, wordEnd })
+
+    const word = text.slice(wordStart, wordEnd)
+
+    if (word.length > 0) {
+      fecthMeanings({
+        word,
+        sourceLang: origin === 'source' ? sourceLanguage : targetLanguage,
+        targetLang: origin === 'source' ? targetLanguage : sourceLanguage,
+      })
+    }
+  }
 
   return (
     <Layout className="">
@@ -51,6 +96,8 @@ export default function TranslatorPage() {
           </Autocomplete>
 
           <Textarea
+            ref={sourceTextareaRef}
+            onClick={() => handleClick('source')}
             size="lg"
             spellCheck="false"
             label="Source Text"
@@ -105,6 +152,7 @@ export default function TranslatorPage() {
           </Autocomplete>
 
           <Textarea
+            ref={translationTextareaRef}
             size="lg"
             className="mt-4"
             classNames={{
@@ -117,45 +165,13 @@ export default function TranslatorPage() {
             placeholder="Translated text will appear here"
             isReadOnly
             spellCheck="false"
-            value={
-              isFetching
-                ? 'Translating...'
-                : translatedText
-                  ? translatedText
-                  : ''
-            }
+            onClick={() => handleClick('translation')}
+            value={isFetching ? 'Translating...' : translatedText}
           />
         </section>
       </div>
 
-      <section className="bg-content1 mt-8 rounded-xl p-12">
-        <header className="flex justify-between">
-          <h2
-            className={cn('text-lg font-bold', {
-              'mb-6': !!meaningsAndDefinitions,
-            })}
-          >
-            {meaningsAndDefinitions
-              ? 'Possible meanings and definitions'
-              : 'Here it will appear the possible meanings and definitions of the source text, if any.'}
-          </h2>
-
-          <Checkbox
-            isSelected={showMeaningsFromTarget}
-            onValueChange={setShowMeaningsFromTarget}
-            className="flex-row-reverse gap-2"
-          >
-            Show meanings of target language
-          </Checkbox>
-        </header>
-
-        {meaningsAndDefinitions && (
-          <div
-            className="prose dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: marked(meaningsAndDefinitions) }}
-          ></div>
-        )}
-      </section>
+      <Meanings meanings={meanings} isFetching={isFetchingDictionary} />
     </Layout>
   )
 }

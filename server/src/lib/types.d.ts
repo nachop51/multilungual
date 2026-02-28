@@ -7,11 +7,6 @@ export interface Translation {
 
 export type TranslationInput = Omit<Translation, 'translatedText'>
 
-export interface TranslationResponse {
-  translation: string
-  sourceMeaning: string | null
-}
-
 export interface WriterInput {
   text: string
   language: Language
@@ -21,15 +16,7 @@ export interface WriterInput {
   audience?: AUDIENCES
 }
 
-export interface WriterResponse {
-  improvedText: string
-}
-
 export interface ChatInput {
   message: string
   history: ModelMessage[]
-}
-
-export interface ChatResponse {
-  response: string
 }

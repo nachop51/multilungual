@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { translateText } from '@/lib/services/api'
-import useDebounce from './use-debounce'
-import { LANGUAGES, type Language } from '../consts'
+import useDebounce from '../../hooks/use-debounce'
+import { LANGUAGES, type Language } from '../../consts'
 
 export const useTranslation = () => {
   const [sourceLanguage, setSourceLanguage] = useState<Language>(
@@ -13,10 +13,6 @@ export const useTranslation = () => {
   const [source, setSource] = useState('')
   const debouncedValue = useDebounce(source, 1000)
   const [translatedText, setTranslatedText] = useState('')
-  const [meaningsAndDefinitions, setMeaningsAndDefinitions] = useState<
-    string | null
-  >(null)
-  const [showMeaningsFromTarget, setShowMeaningsFromTarget] = useState(false)
 
   const [isFetching, setIsFetching] = useState(false)
 
@@ -41,12 +37,12 @@ export const useTranslation = () => {
       })
 
       if (res.data) {
-        setTranslatedText(res.data.translation)
-        setMeaningsAndDefinitions(res.data.sourceMeaning)
+        setTranslatedText(res.data)
       }
     }
 
     fetchTranslation().finally(() => setIsFetching(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue, sourceLanguage, targetLanguage])
 
   const handleSourceLanguageChange = (key: string | number | null) => {
@@ -92,10 +88,7 @@ export const useTranslation = () => {
     source,
     setSource,
     translatedText,
-    meaningsAndDefinitions,
     isFetching,
-    showMeaningsFromTarget,
-    setShowMeaningsFromTarget,
     handleSourceLanguageChange,
     handleTargetLanguageChange,
     swapLanguages,

@@ -1,21 +1,51 @@
 import { GEMINI_MODEL } from './consts'
-import type { Translation, TranslationResponse, WriterInput } from './types.d'
+import type { Translation, WriterInput } from './types.d'
 import { google } from '@ai-sdk/google'
 import { generateText, streamText, type ModelMessage } from 'ai'
 
 const model = google(GEMINI_MODEL)
 
-const meaningGenerationPrompt = (text: string) =>
+interface GetDefinitionParams {
+  word: string
+  sourceLang: string
+  targetLang: string
+}
+
+const meaningGenerationPrompt = ({
+  word,
+  sourceLang,
+  targetLang,
+}: GetDefinitionParams) =>
   `
-Given the following words or short phrase, generate a list of possible meanings and definitions.
+Act as a professional bilingual lexicographer.
+Analyze the word: "${word}"
 
-The output must be short and concise, like a dictionary entry, use an ordered list to list the meanings and definitions.
+Generate a dictionary entry from ${sourceLang} to ${targetLang} following these strict formatting rules:
 
-Do not add any other text or explanation. Just the meaning and definitions in markdown format.
+1. **Header**: The word followed by its part of speech (e.g., "want noun").
+2. **Translations**: List the most common translations in ${targetLang}.
+3. **Gender/Plural**: Include gender markers (m/f) and plural forms where applicable.
+4. **Examples**: For each major meaning, provide a natural example sentence in ${sourceLang} followed immediately by its translation in ${targetLang}.
+5. **Categorization**: Group the output by part of speech (Noun, Verb, Adjective).
+6. **Verb Forms**: For verbs, include the past tense/past participle in parentheses.
 
-Input:
-${text}
+Format the output in clean Markdown. Do not include any intro or outro text.
+
+Input Word: ${word}
 `.trim()
+
+export async function getDefinition({
+  word,
+  sourceLang,
+  targetLang,
+}: GetDefinitionParams) {
+  const { text } = await generateText({
+    model: model,
+    prompt: meaningGenerationPrompt({ word, sourceLang, targetLang }),
+  })
+
+  return text
+}
 
 const translationPrompt = (
   text: string,
@@ -43,25 +73,16 @@ export async function geminiTranslate({
   sourceText,
   sourceLanguage,
   targetLanguage,
-}: Omit<Translation, 'translatedText'>): Promise<TranslationResponse> {
-  let meaning: string | null = null
-
-  if (sourceText.split(' ').length < 5) {
+}: Omit<Translation, 'translatedText'>) {
+  try {
     const { text } = await generateText({
       model: model,
-      prompt: meaningGenerationPrompt(sourceText),
+      prompt: translationPrompt(sourceText, sourceLanguage, targetLanguage),
     })
-    meaning = text
-  }
-
-  const { text } = await generateText({
-    model: model,
-    prompt: translationPrompt(sourceText, sourceLanguage, targetLanguage),
-  })
-
-  return {
-    translation: text,
-    sourceMeaning: meaning,
+    return text
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }
 

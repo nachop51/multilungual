@@ -4,14 +4,14 @@ import { treaty } from '@elysiajs/eden'
 import type { App } from '../../../server/src/index'
 
 // @ts-expect-error - Elysia types are compatible
-const client = treaty<App>('http://localhost:3000')
+export const apiClient = treaty<App>('http://localhost:3000')
 
 export function translateText(data: TranslationInput) {
-  return client.api.translate.post(data)
+  return apiClient.api.translate.post(data)
 }
 
 export function rewriteText(data: WriterInput) {
-  return client.api.rewrite.post({
+  return apiClient.api.rewrite.post({
     text: data.text,
     language: data.language,
     style: data.style,
@@ -22,7 +22,7 @@ export function rewriteText(data: WriterInput) {
 }
 
 export function chatWithAi(data: ChatInput) {
-  return client.api.chat.post({
+  return apiClient.api.chat.post({
     message: data.message,
     history: data.history,
   })

@@ -1,5 +1,10 @@
 import { Elysia, t } from 'elysia'
-import { geminiChat, geminiRewrite, geminiTranslate } from './lib/gemini'
+import {
+  geminiChat,
+  geminiRewrite,
+  geminiTranslate,
+  getDefinition,
+} from './lib/gemini'
 import {
   AUDIENCES,
   CHAT_ROLES,
@@ -10,18 +15,24 @@ import {
   TONES,
 } from './lib/consts'
 import { cors } from '@elysiajs/cors'
+import { logger } from '@tqman/nice-logger'
 
-const app = new Elysia()
+export const app = new Elysia()
+  .use(
+    logger({
+      mode: 'combined', // "live" or "combined" (default: "combined")
+      withTimestamp: true, // optional (default: false)
+      enabled: Bun.env.NODE_ENV !== 'test',
+      withBanner: true,
+    }),
+  )
   .use(cors())
   .post(
     '/api/translate',
     async ({ body }) => {
-      const { translation, sourceMeaning } = await geminiTranslate(body)
+      const translation = await geminiTranslate(body)
 
-      return {
-        translation,
-        sourceMeaning,
-      }
+      return translation
     },
     {
       body: t.Object({
@@ -36,9 +47,7 @@ const app = new Elysia()
     async ({ body }) => {
       const text = await geminiRewrite(body)
 
-      return {
-        improvedText: text,
-      }
+      return text
     },
     {
       body: t.Object({
@@ -74,10 +83,21 @@ const app = new Elysia()
       }),
     },
   )
-  .listen(3000)
+  .get(
+    '/api/dictionary',
+    async ({ query: { word, sourceLang, targetLang } }) => {
+      const definition = await getDefinition({ word, sourceLang, targetLang })
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-)
+      return definition
+    },
+    {
+      query: t.Object({
+        word: t.String({ minLength: 1 }),
+        sourceLang: t.Enum(LANGUAGES),
+        targetLang: t.Enum(LANGUAGES),
+      }),
+    },
+  )
+  .listen(3000)
 
 export type App = typeof app
