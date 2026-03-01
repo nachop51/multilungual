@@ -1,4 +1,4 @@
-:80 {
+multilingual.local.nachop.dev {
     root * /srv
     encode gzip
     try_files {path} /index.html

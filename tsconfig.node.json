@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.mts", "server/src/index.ts"]
+  "include": ["vite.config.mts"]
 }
