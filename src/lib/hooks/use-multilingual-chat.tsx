@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CHAT_ROLES, type ChatMessage } from '@/lib/consts'
+import { CHAT_ROLES, type ChatRole } from '@/lib/consts'
 import { MAX_PROMPT_LENGTH } from '@/lib/consts'
 import { chatWithAi } from '../services/api'
 
@@ -7,7 +7,10 @@ export const useMultilingualChat = () => {
   const [prompt, setPrompt] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [chatHistory, setChatHistory] = useState<
-    (ChatMessage & { id: number })[]
+    {
+      role: ChatRole
+      content: string
+    }[]
   >([])
 
   const submitAiResponse = (response: string) => {
@@ -29,7 +32,7 @@ export const useMultilingualChat = () => {
       { role: CHAT_ROLES.USER, content: userPrompt, id: p.length + 1 },
     ])
 
-    const stream = await chatWithAi({
+    const response = await chatWithAi({
       message: userPrompt,
       history: chatHistory,
     })
@@ -40,7 +43,9 @@ export const useMultilingualChat = () => {
     ])
     setIsStreaming(true)
 
-    const reader = stream.body?.pipeThrough(new TextDecoderStream()).getReader()
+    const reader = response.data?.body
+      ?.pipeThrough(new TextDecoderStream())
+      .getReader()
 
     if (!reader) return
 

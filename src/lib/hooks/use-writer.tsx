@@ -77,7 +77,7 @@ export const useWriter = () => {
         audience,
       })
 
-      setImprovedText(res.improvedText)
+      setImprovedText(res.data || '')
     }
 
     fetchResponse().then(() => setIsFetching(false))
