@@ -18,9 +18,13 @@ FROM gcr.io/distroless/base
 WORKDIR /app
 
 COPY --from=build /app/dist/server server
+COPY --from=build /app/dist/package.json package.json
 
 ENV NODE_ENV=production
 
 CMD ["./server"]
 
-EXPOSE 3000
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+
+EXPOSE ${PORT}
