@@ -107,6 +107,9 @@ export const app = new Elysia()
       }),
     },
   )
-  .listen(3000)
+  .listen({
+    hostname: Bun.env.HOSTNAME ?? '0.0.0.0',
+    port: Bun.env.PORT ?? 3000,
+  })
 
 export type App = typeof app
