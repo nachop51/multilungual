@@ -17,7 +17,6 @@ export const useTranslation = () => {
   const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
-    console.log('debouncedValue', debouncedValue)
     if (!debouncedValue || debouncedValue.trim() === '') {
       setTranslatedText('')
       return

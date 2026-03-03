@@ -18,6 +18,7 @@ import { cors } from '@elysiajs/cors'
 import { logger } from '@tqman/nice-logger'
 
 export const app = new Elysia()
+  .use(new Elysia().all('/api', () => 'Hello World'))
   .use(
     logger({
       mode: 'combined', // "live" or "combined" (default: "combined")
@@ -26,7 +27,15 @@ export const app = new Elysia()
       withBanner: true,
     }),
   )
-  .use(cors())
+  .use(
+    cors({
+      origin: [
+        'http://127.0.0.1:5173',
+        'http://localhost:5173',
+        'https://multilingual.local.nachop.dev',
+      ],
+    }),
+  )
   .post(
     '/api/translate',
     async ({ body }) => {

@@ -9,7 +9,7 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN bun run build
 
@@ -17,9 +17,9 @@ FROM gcr.io/distroless/base
 
 WORKDIR /app
 
-COPY --from=build /app/server server
+COPY --from=build /app/dist/server server
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 CMD ["./server"]
 

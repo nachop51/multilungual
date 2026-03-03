@@ -61,8 +61,6 @@ export default function TranslatorPage() {
       }
     }
 
-    console.log({ wordStart, wordEnd })
-
     const word = text.slice(wordStart, wordEnd)
 
     if (word.length > 0) {

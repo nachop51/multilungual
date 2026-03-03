@@ -4,7 +4,11 @@ import { treaty } from '@elysiajs/eden'
 import type { App } from '../../../server/src/index'
 
 // @ts-expect-error - Elysia types are compatible
-export const apiClient = treaty<App>('http://localhost:3000')
+export const apiClient = treaty<App>(import.meta.env.VITE_API_URL, {
+  fetch: {
+    mode: 'cors',
+  },
+})
 
 export function translateText(data: TranslationInput) {
   return apiClient.api.translate.post(data)
