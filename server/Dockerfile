@@ -18,7 +18,7 @@ FROM gcr.io/distroless/base
 WORKDIR /app
 
 COPY --from=build /app/dist/server server
-COPY --from=build /app/dist/package.json package.json
+COPY --from=build /app/package.json package.json
 
 ENV NODE_ENV=production
 
