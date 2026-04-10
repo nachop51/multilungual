@@ -35,6 +35,7 @@ export default function TranslatorPage() {
 
   const sourceTextareaRef = useRef<HTMLTextAreaElement>(null)
   const translationTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const lastWord = useRef<string>('')
 
   const handleClick = (origin: 'source' | 'translation') => {
     const idx =
@@ -63,7 +64,8 @@ export default function TranslatorPage() {
 
     const word = text.slice(wordStart, wordEnd)
 
-    if (word.length > 0) {
+    if (word.length > 0 && word !== lastWord.current) {
+      lastWord.current = word
       fecthMeanings({
         word,
         sourceLang: origin === 'source' ? sourceLanguage : targetLanguage,

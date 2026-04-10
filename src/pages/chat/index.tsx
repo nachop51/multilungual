@@ -17,8 +17,8 @@ export default function ChatPage() {
 
   const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault()
-    setPrompt('')
     submitPrompt()
+    setPrompt('')
 
     setTimeout(() => {
       shadowRef.current?.scrollTo({

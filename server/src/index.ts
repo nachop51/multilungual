@@ -77,6 +77,10 @@ export const app = new Elysia()
         history: body.history,
       })
 
+      // Set header to event-stream instead of text/plain so eden doesn't automatically
+      // runs the .text() method on the response.
+      textStream.headers.set('Content-Type', 'text/event-stream')
+
       return textStream
     },
     {

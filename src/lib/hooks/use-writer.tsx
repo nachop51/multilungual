@@ -17,7 +17,7 @@ import type { SharedSelection } from '@heroui/react'
 
 export const useWriter = () => {
   const [text, setText] = useState('')
-  const [debouncedValue] = useDebounce(text, 1000)
+  const debouncedValue = useDebounce(text, 1000)
   const [tone, setTone] = useState<Tone>(TONES.NEUTRAL)
   const [style, setStyle] = useState<Style>(STYLES.NORMAL)
   const [audience, setAudience] = useState<Audience>(AUDIENCES.GENERAL)

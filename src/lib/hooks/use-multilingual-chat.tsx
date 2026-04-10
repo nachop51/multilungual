@@ -43,7 +43,7 @@ export const useMultilingualChat = () => {
     ])
     setIsStreaming(true)
 
-    const reader = response.data?.body
+    const reader = response.response.body
       ?.pipeThrough(new TextDecoderStream())
       .getReader()
 
